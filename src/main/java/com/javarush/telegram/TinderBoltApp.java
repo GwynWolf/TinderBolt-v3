@@ -5,6 +5,7 @@ import com.javarush.telegram.DialogMode;
 import com.javarush.telegram.MultiSessionTelegramBot;
 import com.javarush.telegram.UserInfo;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -22,7 +23,7 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     @Override
     public void onUpdateEventReceived(Update update) {
-        //TODO: основний функціонал бота будемо писати тут
+        sendTextMessage("Hello, it's me!");
 
     }
 
