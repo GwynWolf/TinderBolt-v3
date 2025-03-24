@@ -23,7 +23,13 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     @Override
     public void onUpdateEventReceived(Update update) {
-        sendPhotoMessage("profile");
+        String message = update.getMessage().getText();
+        if (message.startsWith("/start")) {
+            String text = loadMessage("main");
+            sendPhotoMessage("main");
+            sendTextMessage(text);
+            return;
+        }
 
     }
 
