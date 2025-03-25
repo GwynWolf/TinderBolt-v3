@@ -62,7 +62,7 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             {
                 dialogMode = DialogMode.GPT;
                 text = loadMessage("gpt");
-                //currentMode = DialogMode.GPT;
+
                 sendPhotoMessage("gpt");
                 sendTextMessage(text);
                 return;
