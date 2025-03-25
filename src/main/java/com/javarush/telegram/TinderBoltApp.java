@@ -30,12 +30,13 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             case("/start"):
             {
                 dialogMode = DialogMode.MAIN;
-                showMainMenu("Main menu", "/start",
-                        "Profile", "/profile",
-                        "Opener", "/opener",
-                        "Send message", "/message",
-                        "Date", "/date",
-                        "ChatGPT", "/gpt");
+                showMainMenu(
+                        "Головне меню бота", "/start",
+                        "Генерація Tinder-профілю \uD83D\uDE0E", "/profile",
+                        "Повідомлення для знайомства \uD83E\uDD70", "/opener",
+                        "Листування від вашого імені \uD83D\uDE08", "/message",
+                        "Листування із зірками", "/date",
+                        "Поставити запитання чату GPT \uD83E\uDDE0", "/gpt");
                 text = loadMessage("main");
                 sendPhotoMessage("main");
                 sendTextMessage(text);
