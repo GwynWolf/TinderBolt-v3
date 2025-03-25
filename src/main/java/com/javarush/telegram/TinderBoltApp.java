@@ -30,6 +30,12 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             case("/start"):
             {
                 dialogMode = DialogMode.MAIN;
+                showMainMenu("Main menu", "/start",
+                        "Profile", "/profile",
+                        "Opener", "/opener",
+                        "Send message", "/message",
+                        "Date", "/date",
+                        "ChatGPT", "/gpt");
                 text = loadMessage("main");
                 sendPhotoMessage("main");
                 sendTextMessage(text);
@@ -63,7 +69,8 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
         }
 
         if (dialogMode == DialogMode.GPT) {
-            sendTextMessage(chatGPTService.sendMessage("Ask a question", message));
+            String prompt = loadPrompt("gpt");
+            sendTextMessage(chatGPTService.sendMessage(prompt, message));
             return;
         }
 
