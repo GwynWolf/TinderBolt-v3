@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class TinderBoltApp extends MultiSessionTelegramBot {
     public static final String TELEGRAM_BOT_NAME = ""; //TODO: додай ім'я бота в лапках
     public static final String TELEGRAM_BOT_TOKEN = ""; //TODO: додай токен бота в лапках
-    public static final String OPEN_AI_TOKEN = "chat-gpt-token"; //TODO: додай токен ChatGPT у лапках
+    public static final String OPEN_AI_TOKEN = ""; //TODO: додай токен ChatGPT у лапках
 
     public TinderBoltApp() {
         super(TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN);
@@ -23,11 +23,20 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     @Override
     public void onUpdateEventReceived(Update update) {
+        String text;
         switch (update.getMessage().getText()) {
             case("/start"):
             {
-                String text = loadMessage("main");
+                text = loadMessage("main");
                 sendPhotoMessage("main");
+                sendTextMessage(text);
+                return;
+            }
+            case("/gpt"):
+            {
+                text = loadMessage("gpt");
+                //currentMode = DialogMode.GPT;
+                sendPhotoMessage("gpt");
                 sendTextMessage(text);
                 return;
             }
