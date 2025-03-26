@@ -45,24 +45,39 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             case("/profile"):
             {
                 dialogMode = DialogMode.PROFILE;
+                text = loadMessage("profile");
+                sendPhotoMessage("profile");
+                sendTextMessage(text);
+                return;
             }
             case("/opener"):
             {
                 dialogMode = DialogMode.OPENER;
+                text = loadMessage("opener");
+                sendPhotoMessage("opener");
+                sendTextMessage(text);
+                return;
             }
             case("/message"):
             {
                 dialogMode = DialogMode.MESSAGE;
+                text = loadMessage("message");
+                sendPhotoMessage("message");
+                sendTextMessage(text);
+                return;
             }
             case("/date"):
             {
                 dialogMode = DialogMode.DATE;
+                text = loadMessage("date");
+                sendPhotoMessage("date");
+                sendTextMessage(text);
+                return;
             }
             case("/gpt"):
             {
                 dialogMode = DialogMode.GPT;
                 text = loadMessage("gpt");
-
                 sendPhotoMessage("gpt");
                 sendTextMessage(text);
                 return;
