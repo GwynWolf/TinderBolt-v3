@@ -122,12 +122,12 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             case MESSAGE:
             {
 
-
                 if(telegram_message.startsWith("message_"))
                 {
                     prompt = loadPrompt(telegram_message);
                     String history_chat = String.join("/n/n", array_message);
-                    sendTextMessage(chatGPTService.sendMessage(prompt, history_chat));
+                    Message msg = sendTextMessage("Обробляю твій запит........");
+                    updateTextMessage(msg, chatGPTService.sendMessage(prompt, history_chat));
                 }
                 array_message.add(telegram_message);
                 return;
@@ -141,7 +141,8 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
                     chatGPTService.setPrompt(prompt);
                     return;
                 }
-                sendTextMessage(chatGPTService.addMessage(telegram_message));
+                Message msg = sendTextMessage("Формую відповідь........");
+                updateTextMessage(msg, chatGPTService.addMessage(telegram_message));
                 return;
             }
             case GPT:
