@@ -18,6 +18,8 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
     public static final String OPEN_AI_TOKEN = ""; //TODO: додай токен ChatGPT у лапках
     public DialogMode dialogMode = DialogMode.MAIN;
     public ChatGPTService chatGPTService = new ChatGPTService(OPEN_AI_TOKEN);
+    private String telegram_message = null;
+
 
     public TinderBoltApp() {
         super(TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN);
@@ -38,9 +40,9 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     @Override
     public void onUpdateEventReceived(Update update) {
-        String prompt, text, message = null;
-        message = checkEmptyMessage(update);
-        switch (message) {
+        String prompt, text;
+        telegram_message = checkEmptyMessage(update);
+        switch (telegram_message) {
             case("/start"):
             {
                 dialogMode = DialogMode.MAIN;
@@ -118,20 +120,20 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case DATE:
             {
-                if (message.startsWith("date_"))
+                if (telegram_message.startsWith("date_"))
                 {
-                    sendPhotoMessage(message);
-                    prompt = loadPrompt(message);
+                    sendPhotoMessage(telegram_message);
+                    prompt = loadPrompt(telegram_message);
                     chatGPTService.setPrompt(prompt);
                     return;
                 }
-                sendTextMessage(chatGPTService.addMessage(message));
+                sendTextMessage(chatGPTService.addMessage(telegram_message));
                 return;
             }
             case GPT:
             {
                 prompt = loadPrompt("gpt");
-                sendTextMessage(chatGPTService.sendMessage(prompt, message));
+                sendTextMessage(chatGPTService.sendMessage(prompt, telegram_message));
             }
         }
 
