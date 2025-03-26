@@ -25,7 +25,21 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     @Override
     public void onUpdateEventReceived(Update update) {
-        String text, message = update.getMessage().getText();
+        String prompt, text, message = null;
+
+        // Проверяем, пришло ли обычное текстовое сообщение
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            message = update.getMessage().getText();
+        }
+
+        // Проверяем, пришел ли CallbackQuery (нажатие кнопки)
+        if (update.hasCallbackQuery()) {
+            message = update.getCallbackQuery().getData(); // Получаем данные кнопки
+        }
+
+        if (message == null) {
+            return; // Предотвращаем NullPointerException
+        }
         switch (message) {
             case("/start"):
             {
@@ -104,11 +118,21 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case DATE:
             {
+                String buttonId = getCallbackQueryButtonKey();
+                System.out.println("Загружаем файл: " + buttonId);
+                if (buttonId.startsWith("date_"))
+                {
+                    sendPhotoMessage(buttonId);
+                    prompt = loadPrompt(buttonId);
+                    chatGPTService.setPrompt(prompt);
+                    return;
+                }
+                sendTextMessage(chatGPTService.addMessage(message));
                 return;
             }
             case GPT:
             {
-                String prompt = loadPrompt("gpt");
+                prompt = loadPrompt("gpt");
                 sendTextMessage(chatGPTService.sendMessage(prompt, message));
             }
         }
