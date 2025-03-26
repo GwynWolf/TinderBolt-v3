@@ -83,7 +83,7 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
                 sendPhotoMessage("message");
                 sendTextButtonsMessage(text,
                         "Запросити на побачення", "message_date",
-                        "Відповісти на повідомлення", "message_note");
+                        "Відповісти на повідомлення", "message_next");
                 array_message = new ArrayList<>();
                 return;
             }
