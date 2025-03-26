@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TinderBoltApp extends MultiSessionTelegramBot {
     public static final String TELEGRAM_BOT_NAME = ""; //TODO: додай ім'я бота в лапках
@@ -19,6 +20,7 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
     public DialogMode dialogMode = DialogMode.MAIN;
     public ChatGPTService chatGPTService = new ChatGPTService(OPEN_AI_TOKEN);
     private String telegram_message = null;
+    private List<String> array_message;
 
 
     public TinderBoltApp() {
@@ -79,7 +81,10 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
                 dialogMode = DialogMode.MESSAGE;
                 text = loadMessage("message");
                 sendPhotoMessage("message");
-                sendTextMessage(text);
+                sendTextButtonsMessage(text,
+                        "Запросити на побачення", "message_date",
+                        "Відповісти на повідомлення", "message_note");
+                array_message = new ArrayList<>();
                 return;
             }
             case("/date"):
@@ -116,6 +121,15 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case MESSAGE:
             {
+
+
+                if(telegram_message.startsWith("message_"))
+                {
+                    prompt = loadPrompt(telegram_message);
+                    String history_chat = String.join("/n/n", array_message);
+                    sendTextMessage(chatGPTService.sendMessage(prompt, history_chat));
+                }
+                array_message.add(telegram_message);
                 return;
             }
             case DATE:
