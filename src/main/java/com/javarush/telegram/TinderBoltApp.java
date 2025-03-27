@@ -27,23 +27,11 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
         super(TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN);
     }
 
-    private String checkEmptyMessage(Update update) {
-        String message = null;
-        //Check input message
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            message = update.getMessage().getText();
-        }
-        //Check click on button
-        if (update.hasCallbackQuery()) {
-            message = getCallbackQueryButtonKey();//get button value
-        }
-        return message;
-    }
 
     @Override
     public void onUpdateEventReceived(Update update) {
         String prompt, text;
-        telegram_message = checkEmptyMessage(update);
+        telegram_message = getMessageText();
         switch (telegram_message) {
             case("/start"):
             {
@@ -121,10 +109,10 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case MESSAGE:
             {
-
-                if(telegram_message.startsWith("message_"))
+                String querry  = getCallbackQueryButtonKey();
+                if(querry.startsWith("message_"))
                 {
-                    prompt = loadPrompt(telegram_message);
+                    prompt = loadPrompt(querry);
                     String history_chat = String.join("/n/n", array_message);
                     Message msg = sendTextMessage("Обробляю твій запит........");
                     updateTextMessage(msg, chatGPTService.sendMessage(prompt, history_chat));
@@ -134,10 +122,11 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case DATE:
             {
-                if (telegram_message.startsWith("date_"))
+                String querry  = getCallbackQueryButtonKey();
+                if (querry.startsWith("date_"))
                 {
-                    sendPhotoMessage(telegram_message);
-                    prompt = loadPrompt(telegram_message);
+                    sendPhotoMessage(querry);
+                    prompt = loadPrompt(querry);
                     chatGPTService.setPrompt(prompt);
                     return;
                 }
