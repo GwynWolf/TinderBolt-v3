@@ -1,11 +1,6 @@
 package com.javarush.telegram;
 
-import com.javarush.telegram.ChatGPTService;
-import com.javarush.telegram.DialogMode;
-import com.javarush.telegram.MultiSessionTelegramBot;
-import com.javarush.telegram.UserInfo;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -20,8 +15,8 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
     public DialogMode dialogMode = DialogMode.MAIN;
     public ChatGPTService chatGPTService = new ChatGPTService(OPEN_AI_TOKEN);
     private List<String> array_message;
-    private String prompt;
-    private UserInfo user;
+    private UserInfo userInfo;
+    //private UserInfo personInfo;
     private int numberQuestion = 0;
 
 
@@ -56,7 +51,7 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
                 text = loadMessage("profile");
                 sendPhotoMessage("profile");
                 sendTextMessage(text);
-                user = new UserInfo();
+                userInfo = new UserInfo();
                 numberQuestion = 1;
                 sendTextMessage("Як тебе звати?");
                 return;
@@ -67,6 +62,9 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
                 text = loadMessage("opener");
                 sendPhotoMessage("opener");
                 sendTextMessage(text);
+                userInfo = new UserInfo();
+                numberQuestion = 1;
+                sendTextMessage("Опиши її, щоб ми згенерували твоє майбутнє повідомлення. Як її звати?");
                 return;
             }
             case("/message"):
@@ -103,16 +101,25 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
         }
 
+        String prompt;
         switch (dialogMode) {
             case MAIN:
             {
+                return;
+            }
+            case OPENER:
+            {
+                if(numberQuestion <= 5)
+                {
+                    askQuestion(telegram_message, "opener");
+                }
                 return;
             }
             case PROFILE:
             {
                 if(numberQuestion <= 5)
                 {
-                    askQuestion(telegram_message);
+                    askQuestion(telegram_message, "profile");
                 }
                 return;
             }
@@ -152,40 +159,39 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
 
     }
 
-    private void askQuestion(String message)
+    private void askQuestion(String message, String prompt)
     {
         switch (numberQuestion)
         {
-            case 1 -> {
-                user.name = message;
+            case 1: {
+                userInfo.name = message;
                 numberQuestion = 2;
-                sendTextMessage("Скільки Вам років?");
+                sendTextMessage("Скільки років?");
                 return;
             }
-            case 2 -> {
-                user.age = message;
+            case 2: {
+                userInfo.age = message;
                 numberQuestion = 3;
-                sendTextMessage("Яка твоя стать?");
+                sendTextMessage("Яка стать?");
                 return;
             }
-            case 3 -> {
-                user.sex = message;
+            case 3: {
+                userInfo.sex = message;
                 numberQuestion = 4;
-                sendTextMessage("Яке твоє хоббі?");
+                sendTextMessage("Яке хоббі?");
                 return;
             }
-            case 4 -> {
-                user.hobby = message;
+            case 4: {
+                userInfo.hobby = message;
                 numberQuestion = 5;
                 sendTextMessage("Яка ціль знайомства?");
                 return;
             }
-            case 5 -> {
-                user.goals = message;
+            case 5: {
+                userInfo.goals = message;
                 numberQuestion = 0;
-                prompt = loadPrompt("profile");
                 Message msg = sendTextMessage("Формую цікавий опис......");
-                updateTextMessage(msg, chatGPTService.sendMessage(prompt, user.toString()));
+                updateTextMessage(msg, chatGPTService.sendMessage(prompt, userInfo.toString()));
                 return;
             }
         }
