@@ -110,7 +110,10 @@ public class TinderBoltApp extends MultiSessionTelegramBot {
             }
             case PROFILE:
             {
-                askQuestion(telegram_message);
+                if(numberQuestion <= 5)
+                {
+                    askQuestion(telegram_message);
+                }
                 return;
             }
             case MESSAGE:
